@@ -1,0 +1,85 @@
+DROP TABLE IF EXISTS routes;
+
+DROP TABLE IF EXISTS stops;
+
+DROP TABLE IF EXISTS drivers;
+
+DROP TABLE IF EXISTS vehicles;
+
+DROP TABLE IF EXISTS trips;
+
+DROP TABLE IF EXISTS tickets;
+
+CREATE TABLE routes (
+    route_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    route_name TEXT NOT NULL,
+    route_number INTEGER NOT NULL,
+    is_active INTEGER NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE stops (
+    stop_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    stop_name TEXT NOT NULL,
+    zone TEXT NOT NULL
+);
+
+CREATE TABLE drivers (
+    driver_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    hire_date TEXT NOT NULL,
+    status TEXT NOT NULL
+);
+
+CREATE TABLE vehicles (
+    vehicle_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    vehicle_number TEXT NOT NULL UNIQUE,
+    vehicle_type TEXT NOT NULL,
+    capacity INTEGER NOT NULL,
+    in_service INTEGER NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE trips (
+    trip_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    route_id INTEGER NOT NULL,
+    driver_id INTEGER NOT NULL,
+    vehicle_id INTEGER NOT NULL,
+    trip_date TEXT NOT NULL,
+    scheduled_start_time TEXT NOT NULL,
+    scheduled_end_time TEXT NOT NULL,
+    actual_start_time TEXT,
+    actual_end_time TEXT,
+    FOREIGN KEY (route_id) REFERENCES routes (route_id),
+    FOREIGN KEY (driver_id) REFERENCES drivers (driver_id),
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id)
+);
+
+CREATE TABLE tickets (
+    ticket_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    trip_id INTEGER NOT NULL,
+    board_stop_id INTEGER NOT NULL,
+    alight_stop_id INTEGER NOT NULL,
+    fare_paid REAL NOT NULL,
+    payment_method TEXT NOT NULL,
+    FOREIGN KEY (trip_id) REFERENCES trips (trip_id),
+    FOREIGN KEY (board_stop_id) REFERENCES stops (stop_id),
+    FOREIGN KEY (alight_stop_id) REFERENCES stops (stop_id)
+);
+
+SELECT *
+FROM routes;
+
+SELECT *
+FROM stops;
+
+SELECT *
+FROM drivers;
+
+SELECT *
+FROM vehicles;
+
+SELECT *
+FROM trips;
+
+SELECT *
+FROM tickets;
